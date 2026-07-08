@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 4.1a - บันทึกข้อมูลส่วนตัว | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 460px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 14px 0 6px;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 18px;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    a.link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .msg {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #EAF6F0;
+      color: #1F6B45;
+      border: 1px solid #BFE3CE;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 4.1a</span>
+    <h1>ข้อมูลส่วนตัวของฉัน</h1>
+    <p style="color:var(--muted);font-size:14px;">ข้อมูลจะถูกบันทึกลง <code>localStorage</code>
+      และจะยังอยู่แม้ปิดเบราว์เซอร์</p>
+
+    <label for="fname">ชื่อ</label>
+    <input type="text" id="fname">
+
+    <label for="femail">อีเมล</label>
+    <input type="text" id="femail">
+
+    <label for="fphone">เบอร์โทร</label>
+    <input type="text" id="fphone">
+
+    <label for="ftheme">ธีมที่ต้องการ (Theme)</label>
+    <select id="ftheme">
+      <option value="light">สว่าง (Light)</option>
+      <option value="dark">มืด (Dark)</option>
+    </select>
+
+    <button onclick="saveProfile()">บันทึกข้อมูล</button>
+    <div class="msg" id="msgBox">บันทึกข้อมูลเรียบร้อยแล้ว</div>
+
+    <a class="link" href="lab4_1b.html">→ ไปที่หน้าแสดงข้อมูลที่บันทึก (lab4_1b.html)</a>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 4.1</footer>
+
+  <script>
+    function saveProfile() {
+      let profile = {
+        name: document.getElementById("fname").value.trim(),
+        email: document.getElementById("femail").value.trim(),
+        phone: document.getElementById("fphone").value.trim(),
+        theme: document.getElementById("ftheme").value
+      };
+      localStorage.setItem("spu_shop_profile", JSON.stringify(profile));
+
+      let msg = document.getElementById("msgBox");
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 2000);
+    }
+  </script>
+</body>
+
+</html>

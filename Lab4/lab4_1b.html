@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 4.1b - ข้อมูลที่บันทึกไว้ | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #161A17;
+      --surface: #20261F;
+      --text: #EDEFEA;
+      --muted: #9AA39A;
+      --border: #33403A;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+      transition: background .2s, color .2s;
+    }
+
+    h1 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 460px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .field {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .field span:first-child {
+      color: var(--muted);
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 16px;
+      margin-right: 8px;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    a.link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 4.1b</span>
+    <h1>ข้อมูลที่บันทึกไว้</h1>
+    <div id="profileBox"></div>
+
+    <button onclick="toggleTheme()">สลับ Theme</button>
+    <button class="secondary" onclick="clearProfile()">ล้างข้อมูล</button>
+    <a class="link" href="lab4_1a.html">← กลับไปหน้ากรอกข้อมูล (lab4_1a.html)</a>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 4.1</footer>
+
+  <script>
+    function loadProfile() {
+      let profile = JSON.parse(localStorage.getItem("spu_shop_profile"));
+      let box = document.getElementById("profileBox");
+
+      if (!profile) {
+        box.innerHTML = '<p class="empty">ยังไม่มีข้อมูลที่บันทึกไว้ กรุณาไปกรอกข้อมูลที่หน้า lab4_1a.html ก่อน</p>';
+        return;
+      }
+
+      box.innerHTML = `
+    <div class="field"><span>ชื่อ</span><span>${profile.name || "-"}</span></div>
+    <div class="field"><span>อีเมล</span><span>${profile.email || "-"}</span></div>
+    <div class="field"><span>เบอร์โทร</span><span>${profile.phone || "-"}</span></div>
+    <div class="field"><span>Theme</span><span>${profile.theme === "dark" ? "มืด (Dark)" : "สว่าง (Light)"}</span></div>
+  `;
+
+      document.documentElement.setAttribute("data-theme", profile.theme || "light");
+    }
+
+    function toggleTheme() {
+      let current = document.documentElement.getAttribute("data-theme") || "light";
+      let next = current === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+
+      let profile = JSON.parse(localStorage.getItem("spu_shop_profile")) || {};
+      profile.theme = next;
+      localStorage.setItem("spu_shop_profile", JSON.stringify(profile));
+      loadProfile();
+    }
+
+    function clearProfile() {
+      localStorage.removeItem("spu_shop_profile");
+      document.documentElement.setAttribute("data-theme", "light");
+      loadProfile();
+    }
+
+    loadProfile();
+  </script>
+</body>
+
+</html>

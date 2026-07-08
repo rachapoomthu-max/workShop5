@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 4.2b - ตะกร้าสินค้า | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: #F1EEE7;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+    }
+
+    .total {
+      margin-top: 16px;
+      text-align: right;
+      font-size: 16px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    a.link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .compare th,
+    .compare td {
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 4.2b</span>
+    <h1>ตะกร้าสินค้าของฉัน</h1>
+    <div id="cartBox"></div>
+    <a class="link" href="lab4_2a.html">← กลับไปเลือกสินค้าเพิ่ม (lab4_2a.html)</a>
+  </div>
+
+  <div class="card">
+    <h2>localStorage vs sessionStorage</h2>
+    <table class="compare">
+      <tr>
+        <th>หัวข้อ</th>
+        <th>localStorage</th>
+        <th>sessionStorage</th>
+      </tr>
+      <tr>
+        <td>อายุข้อมูล</td>
+        <td>อยู่ถาวรจนกว่าจะถูกลบ แม้ปิดเบราว์เซอร์</td>
+        <td>หายทันทีเมื่อปิดแท็บ/เบราว์เซอร์</td>
+      </tr>
+      <tr>
+        <td>ตัวอย่างการใช้งาน</td>
+        <td>ข้อมูลโปรไฟล์ผู้ใช้ (Lab 4.1)</td>
+        <td>ตะกร้าสินค้าชั่วคราวก่อน Checkout (Lab 4.2)</td>
+      </tr>
+      <tr>
+        <td>ขอบเขต (Scope)</td>
+        <td>ใช้ร่วมกันได้ทุกแท็บของโดเมนเดียวกัน</td>
+        <td>ใช้ได้เฉพาะแท็บที่เปิดอยู่เท่านั้น</td>
+      </tr>
+    </table>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 4.2</footer>
+
+  <script>
+    function loadCart() {
+      let cart = JSON.parse(sessionStorage.getItem("spu_shop_cart")) || [];
+      let box = document.getElementById("cartBox");
+
+      if (cart.length === 0) {
+        box.innerHTML = '<p class="empty">ตะกร้าว่างเปล่า กรุณาเลือกสินค้าที่หน้า lab4_2a.html</p>';
+        return;
+      }
+
+      let html = `<table><tr><th>สินค้า</th><th class="num">ราคา</th><th class="num">จำนวน</th><th class="num">รวม</th></tr>`;
+      let total = 0;
+      cart.forEach(item => {
+        let subtotal = item.price * item.qty;
+        total += subtotal;
+        html += `<tr><td>${item.name}</td><td class="num">${item.price.toLocaleString()}</td>
+      <td class="num">${item.qty}</td><td class="num">${subtotal.toLocaleString()}</td></tr>`;
+      });
+      html += `</table><div class="total">ยอดรวมทั้งหมด: <strong>${total.toLocaleString()} บาท</strong></div>`;
+      box.innerHTML = html;
+    }
+
+    loadCart();
+  </script>
+</body>
+
+</html>

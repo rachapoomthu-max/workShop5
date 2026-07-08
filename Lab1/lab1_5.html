@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1.5 - LocalStorage</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+        }
+
+        header {
+            background: #0d6efd;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .card {
+            width: 500px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, .15);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #saveBtn {
+            background: #0d6efd;
+            color: white;
+        }
+
+        #saveBtn:hover {
+            background: #0b5ed7;
+        }
+
+        #clearBtn {
+            background: #dc3545;
+            color: white;
+        }
+
+        #clearBtn:hover {
+            background: #bb2d3b;
+        }
+
+        hr {
+            margin: 30px 0;
+        }
+
+        #result p {
+            margin: 8px 0;
+            font-size: 17px;
+        }
+
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <h1>LocalStorage Example</h1>
+    </header>
+
+    <main>
+
+        <div class="card">
+
+            <h2>Member Registration</h2>
+
+            <form id="registerForm">
+
+                <label>Full Name</label>
+                <input type="text" id="fullname">
+
+                <label>Email</label>
+                <input type="text" id="email">
+
+                <label>Phone Number</label>
+                <input type="text" id="phone">
+
+                <label>Password</label>
+                <input type="password" id="password">
+
+                <button type="submit" id="saveBtn">
+                    Register
+                </button>
+
+            </form>
+
+            <hr>
+
+            <h2>Saved Information</h2>
+
+            <div id="result"></div>
+
+            <button id="clearBtn">
+                Clear Data
+            </button>
+
+        </div>
+
+    </main>
+
+    <footer>
+        CSI204 Digital Platform for Software Development
+    </footer>
+
+    <script>
+
+        const form = document.getElementById("registerForm");
+
+        function displayData() {
+
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            if (!user) {
+
+                document.getElementById("result").innerHTML = "<p>No Data</p>";
+                return;
+
+            }
+
+            document.getElementById("result").innerHTML = `
+
+                <p><strong>Full Name :</strong> ${user.fullname}</p>
+
+                <p><strong>Email :</strong> ${user.email}</p>
+
+                <p><strong>Phone :</strong> ${user.phone}</p>
+
+            `;
+
+        }
+
+        form.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            let fullname = document.getElementById("fullname").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let password = document.getElementById("password").value;
+
+            if (fullname === "") {
+                alert("Please enter your full name.");
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                alert("Invalid email address.");
+                return;
+            }
+
+            if (!/^\d{10}$/.test(phone)) {
+                alert("Phone number must contain exactly 10 digits.");
+                return;
+            }
+
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters.");
+                return;
+            }
+
+            const user = {
+
+                fullname: fullname,
+                email: email,
+                phone: phone,
+                password: password
+
+            };
+
+            localStorage.setItem("user", JSON.stringify(user));
+
+            console.log("===== Register Success =====");
+            console.log(user);
+            console.log("Data Saved Successfully.");
+
+            displayData();
+
+            alert("Registration Successful!");
+
+            form.reset();
+
+        });
+
+        document.getElementById("clearBtn").addEventListener("click", function () {
+
+            localStorage.removeItem("user");
+
+            displayData();
+
+            console.log("Data Deleted.");
+
+            alert("Data Deleted Successfully.");
+
+        });
+
+        displayData();
+
+    </script>
+
+</body>
+
+</html>

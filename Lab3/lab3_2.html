@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 3.2 - คำนวณค่างวดรถยนต์</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAF7F2;
+            --surface: #FFFFFF;
+            --primary: #1F4E44;
+            --primary-dark: #153731;
+            --accent: #E08E45;
+            --text: #22271F;
+            --muted: #6B7280;
+            --border: #E5E1D8;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px 16px;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .card {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid var(--accent);
+            border-color: var(--accent);
+        }
+
+        button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        .result {
+            background: #F1F7F5;
+            border: 1px solid #CFE3DC;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        .result p {
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 13px;
+        }
+
+        th,
+        td {
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border);
+            text-align: right;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: center;
+        }
+
+        th {
+            background: #F1EEE7;
+        }
+
+        .warn {
+            color: #B3261E;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <span class="tag">Lab 3.2</span>
+        <h1>ฟอร์มคำนวณค่างวดรถยนต์</h1>
+
+        <label for="carPrice">ราคารถ (บาท)</label>
+        <input type="number" id="carPrice" placeholder="เช่น 750000">
+
+        <label for="downPayment">เงินดาวน์ (บาท)</label>
+        <input type="number" id="downPayment" placeholder="เช่น 150000">
+
+        <label for="interestRate">อัตราดอกเบี้ย (% ต่อปี, รถยนต์ทั่วไป 2-5%)</label>
+        <input type="number" id="interestRate" value="3.5" step="0.1">
+
+        <label for="months">ระยะเวลาผ่อน (เดือน)</label>
+        <input type="number" id="months" value="48">
+
+        <button onclick="calculateCarLoan()">คำนวณค่างวด</button>
+        <div class="warn" id="warnBox"></div>
+        <div id="result"></div>
+    </div>
+
+    <footer>CSI204 Digital Platform for Software Development — Lab 3.2</footer>
+
+    <script>
+        function calculateCarLoan() {
+            let carPrice = parseFloat(document.getElementById("carPrice").value);
+            let downPayment = parseFloat(document.getElementById("downPayment").value);
+            let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            let months = parseInt(document.getElementById("months").value);
+
+            let warnBox = document.getElementById("warnBox");
+            warnBox.textContent = "";
+
+            if (isNaN(carPrice) || carPrice <= 0) { warnBox.textContent = "กรุณากรอกราคารถให้ถูกต้อง"; return; }
+            if (isNaN(downPayment) || downPayment < 0 || downPayment >= carPrice) {
+                warnBox.textContent = "เงินดาวน์ต้องน้อยกว่าราคารถและไม่ติดลบ"; return;
+            }
+
+            let loanAmount = carPrice - downPayment;
+
+            let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) /
+                (Math.pow(1 + interestRate, months) - 1);
+            if (isNaN(monthlyPayment) || !isFinite(monthlyPayment)) monthlyPayment = loanAmount / months;
+
+            let totalPayment = monthlyPayment * months;
+            let totalInterest = totalPayment - loanAmount;
+
+            // ตารางผ่อนชำระแบบย่อ (ทุก 6 เดือน)
+            let tableHtml = `<table><tr><th>งวดที่</th><th>ค่างวด</th><th>เงินต้นสะสม</th><th>ดอกเบี้ยสะสม</th><th>คงเหลือ</th></tr>`;
+            let remaining = loanAmount;
+            let accInterest = 0, accPrincipal = 0;
+            for (let i = 1; i <= months; i++) {
+                let interest = remaining * interestRate;
+                let principal = monthlyPayment - interest;
+                remaining -= principal;
+                accInterest += interest;
+                accPrincipal += principal;
+                if (i % 6 === 0 || i === months) {
+                    tableHtml += `<tr><td>${i}</td><td>${monthlyPayment.toFixed(2)}</td>
+        <td>${accPrincipal.toFixed(2)}</td><td>${accInterest.toFixed(2)}</td>
+        <td>${Math.max(0, remaining).toFixed(2)}</td></tr>`;
+                }
+            }
+            tableHtml += "</table>";
+
+            document.getElementById("result").innerHTML = `
+    <div class="result">
+      <h3>สรุปสินเชื่อรถยนต์</h3>
+      <p>จำนวนเงินกู้สุทธิ: ${loanAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</p>
+      <p><strong>ค่างวดต่อเดือน: ${monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</strong></p>
+      <p>ยอดรวมที่ต้องชำระ: ${totalPayment.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</p>
+      <p>ดอกเบี้ยรวม: ${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</p>
+      ${tableHtml}
+    </div>
+  `;
+        }
+    </script>
+</body>
+
+</html>

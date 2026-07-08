@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 4.2a - เลือกสินค้า | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .product {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product .info {
+      font-size: 14px;
+    }
+
+    .product .info strong {
+      display: block;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+    }
+
+    .qty {
+      width: 60px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    a.link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 4.2a</span>
+    <h1>เลือกสินค้าใส่ตะกร้า</h1>
+    <p style="color:var(--muted);font-size:14px;">ข้อมูลตะกร้าจะถูกเก็บใน <code>sessionStorage</code> —
+      หายไปเมื่อปิดแท็บ/เบราว์เซอร์</p>
+
+    <div id="productList"></div>
+
+    <button onclick="addToCart()">เพิ่มลงตะกร้า</button>
+    <a class="link" href="lab4_2b.html">→ ไปที่ตะกร้าสินค้า (lab4_2b.html)</a>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 4.2</footer>
+
+  <script>
+    const products = [
+      { id: "P001", name: "เสื้อยืดลายแบรนด์", price: 390 },
+      { id: "P002", name: "กางเกงยีนส์ทรงขาบาน", price: 890 },
+      { id: "P003", name: "หมวกแก๊ป SPU Shop", price: 250 },
+      { id: "P004", name: "กระเป๋าผ้าแคนวาส", price: 320 }
+    ];
+
+    function renderProducts() {
+      let html = "";
+      products.forEach(p => {
+        html += `
+      <div class="product">
+        <div class="info"><strong>${p.name}</strong>${p.price.toLocaleString()} บาท</div>
+        <input type="number" class="qty" id="qty_${p.id}" min="0" value="0">
+      </div>
+    `;
+      });
+      document.getElementById("productList").innerHTML = html;
+    }
+
+    function addToCart() {
+      let cart = JSON.parse(sessionStorage.getItem("spu_shop_cart")) || [];
+
+      products.forEach(p => {
+        let qty = parseInt(document.getElementById(`qty_${p.id}`).value) || 0;
+        if (qty > 0) {
+          let existing = cart.find(item => item.id === p.id);
+          if (existing) {
+            existing.qty += qty;
+          } else {
+            cart.push({ id: p.id, name: p.name, price: p.price, qty: qty });
+          }
+        }
+      });
+
+      sessionStorage.setItem("spu_shop_cart", JSON.stringify(cart));
+      alert("เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว");
+      renderProducts();
+    }
+
+    renderProducts();
+  </script>
+</body>
+
+</html>

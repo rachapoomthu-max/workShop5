@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 6.2 - กรองสินค้าตามหมวดหมู่ | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: #F1EEE7;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+    }
+
+    .stock-low {
+      color: #B3261E;
+      font-weight: 600;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      padding: 12px 0;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 6.2</span>
+    <h1>รายการสินค้า SPU Shop</h1>
+
+    <label for="categoryFilter" style="font-weight:600;font-size:14px;">กรองตามหมวดหมู่:&nbsp;</label>
+    <select id="categoryFilter" onchange="renderTable()">
+      <option value="all">ทั้งหมด</option>
+      <option value="เสื้อผ้า">เสื้อผ้า</option>
+      <option value="อุปกรณ์">อุปกรณ์</option>
+      <option value="อาหาร">อาหาร</option>
+    </select>
+
+    <div id="tableBox"></div>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 6.2</footer>
+
+  <script>
+    const products = [
+      { name: "เสื้อยืดลายแบรนด์", category: "เสื้อผ้า", price: 390, stock: 45 },
+      { name: "กางเกงยีนส์ทรงขาบาน", category: "เสื้อผ้า", price: 890, stock: 8 },
+      { name: "หมวกแก๊ป SPU Shop", category: "อุปกรณ์", price: 250, stock: 30 },
+      { name: "กระเป๋าผ้าแคนวาส", category: "อุปกรณ์", price: 320, stock: 3 },
+      { name: "คุกกี้เนยสด", category: "อาหาร", price: 120, stock: 60 },
+      { name: "กาแฟคั่วบด SPU Blend", category: "อาหาร", price: 180, stock: 15 }
+    ];
+
+    function renderTable() {
+      let selected = document.getElementById("categoryFilter").value;
+      let filtered;
+
+      if (selected === "all") {
+        filtered = products;
+      } else {
+        filtered = products.filter(p => p.category === selected);
+      }
+
+      let box = document.getElementById("tableBox");
+      if (filtered.length === 0) {
+        box.innerHTML = '<p class="empty">ไม่พบสินค้าในหมวดหมู่นี้</p>';
+        return;
+      }
+
+      let html = `<table><tr><th>ชื่อสินค้า</th><th>หมวดหมู่</th><th class="num">ราคา</th><th class="num">สต็อก</th></tr>`;
+      filtered.forEach(p => {
+        let stockClass = p.stock <= 5 ? "stock-low" : "";
+        html += `<tr><td>${p.name}</td><td>${p.category}</td>
+      <td class="num">${p.price.toLocaleString()}</td>
+      <td class="num ${stockClass}">${p.stock}${p.stock <= 5 ? " (ใกล้หมด)" : ""}</td></tr>`;
+      });
+      html += "</table>";
+      box.innerHTML = html;
+    }
+
+    renderTable();
+  </script>
+</body>
+
+</html>

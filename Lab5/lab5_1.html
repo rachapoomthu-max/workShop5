@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 5.1 - คำนวณราคาสินค้า | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1,
+    h3 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .item input {
+      width: 16px;
+      height: 16px;
+    }
+
+    .item span.name {
+      flex: 1;
+      font-weight: 600;
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .result {
+      background: #F1F7F5;
+      border: 1px solid #CFE3DC;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .result p {
+      margin: 4px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 5.1</span>
+    <h1>เลือกสินค้าและคำนวณราคา</h1>
+    <p style="color:var(--muted);font-size:14px;">ส่วนลด: ยอดรวม &gt; 500 บาท ลด 10% | ยอดรวม &gt; 1,000 บาท ลด 15%</p>
+
+    <div id="productList"></div>
+
+    <button onclick="calculateTotal()">คำนวณราคารวม</button>
+    <div id="result"></div>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 5.1</footer>
+
+  <script>
+    const products = [
+      { id: "P001", name: "เสื้อยืดลายแบรนด์", price: 390 },
+      { id: "P002", name: "กางเกงยีนส์ทรงขาบาน", price: 890 },
+      { id: "P003", name: "หมวกแก๊ป SPU Shop", price: 250 },
+      { id: "P004", name: "กระเป๋าผ้าแคนวาส", price: 320 },
+      { id: "P005", name: "รองเท้าผ้าใบ", price: 1290 }
+    ];
+
+    function renderProducts() {
+      let html = "";
+      products.forEach(p => {
+        html += `
+      <label class="item" for="chk_${p.id}">
+        <input type="checkbox" id="chk_${p.id}" data-price="${p.price}">
+        <span class="name">${p.name}</span>
+        <span>${p.price.toLocaleString()} บาท</span>
+      </label>
+    `;
+      });
+      document.getElementById("productList").innerHTML = html;
+    }
+
+    function calculateTotal() {
+      let subtotal = 0;
+      products.forEach(p => {
+        let checkbox = document.getElementById(`chk_${p.id}`);
+        if (checkbox.checked) subtotal += p.price;
+      });
+
+      let discountRate = 0;
+      if (subtotal > 1000) {
+        discountRate = 0.15;
+      } else if (subtotal > 500) {
+        discountRate = 0.10;
+      }
+
+      let discount = subtotal * discountRate;
+      let total = subtotal - discount;
+
+      document.getElementById("result").innerHTML = `
+    <div class="result">
+      <h3>สรุปยอดสั่งซื้อ</h3>
+      <p><span>ยอดรวมสินค้า:</span><span>${subtotal.toLocaleString()} บาท</span></p>
+      <p><span>ส่วนลด (${(discountRate * 100).toFixed(0)}%):</span><span>-${discount.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</span></p>
+      <p><strong>ยอดชำระสุทธิ:</strong><strong>${total.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</strong></p>
+    </div>
+  `;
+    }
+
+    renderProducts();
+  </script>
+</body>
+
+</html>

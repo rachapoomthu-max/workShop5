@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 6.1 - ระบบแปลงหน่วย</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1,
+    h3 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 460px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 14px 0 6px;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    .result {
+      background: #F1F7F5;
+      border: 1px solid #CFE3DC;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      font-size: 16px;
+      text-align: center;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 6.1</span>
+    <h1>ระบบแปลงหน่วย</h1>
+    <p style="color:var(--muted);font-size:14px;">ใช้สำหรับแปลงหน่วยน้ำหนัก/อุณหภูมิ/ระยะทางของสินค้าในระบบขนส่ง</p>
+
+    <label for="convertType">เลือกประเภทการแปลง</label>
+    <select id="convertType">
+      <option value="kgToLb">กิโลกรัม → ปอนด์ (kg → lb)</option>
+      <option value="cToF">เซลเซียส → ฟาเรนไฮต์ (°C → °F)</option>
+      <option value="kmToMile">กิโลเมตร → ไมล์ (km → mile)</option>
+    </select>
+
+    <label for="inputValue">ค่าที่ต้องการแปลง</label>
+    <input type="number" id="inputValue" placeholder="กรอกตัวเลข">
+
+    <button onclick="convert()">แปลงหน่วย</button>
+    <div id="result"></div>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 6.1</footer>
+
+  <script>
+    function convert() {
+      let type = document.getElementById("convertType").value;
+      let value = parseFloat(document.getElementById("inputValue").value);
+      let result = 0;
+      let resultHtml = "";
+
+      if (isNaN(value)) {
+        document.getElementById("result").innerHTML = '<div class="result">กรุณากรอกตัวเลขให้ถูกต้อง</div>';
+        return;
+      }
+
+      switch (type) {
+        case "kgToLb":
+          result = value * 2.20462;
+          resultHtml = `${value} กิโลกรัม = ${result.toFixed(2)} ปอนด์`;
+          break;
+        case "cToF":
+          result = (value * 9 / 5) + 32;
+          resultHtml = `${value} องศาเซลเซียส = ${result.toFixed(2)} องศาฟาเรนไฮต์`;
+          break;
+        case "kmToMile":
+          result = value * 0.621371;
+          resultHtml = `${value} กิโลเมตร = ${result.toFixed(2)} ไมล์`;
+          break;
+        default:
+          resultHtml = "กรุณาเลือกประเภทการแปลง";
+      }
+
+      document.getElementById("result").innerHTML = `<div class="result">${resultHtml}</div>`;
+    }
+  </script>
+</body>
+
+</html>

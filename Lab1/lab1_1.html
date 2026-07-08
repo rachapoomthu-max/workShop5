@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1.1 - Data Types</title>
+</head>
+
+<body>
+
+    <div>
+
+        <h1>Lab 1.1 : Data Types</h1>
+
+        <div id="output"></div>
+
+    </div>
+
+    <script>
+
+        // =============================
+        // String
+        // =============================
+
+        let name = "Rachanon";
+
+        // =============================
+        // Number
+        // =============================
+
+        let age = 20;
+
+        // =============================
+        // Boolean
+        // =============================
+
+        let status = true;
+
+        // =============================
+        // Array
+        // =============================
+
+        let scores = [80, 90, 100];
+
+        // =============================
+        // Object
+        // =============================
+
+        let student = {
+            id: 1,
+            name: "Rachanon"
+        };
+
+        // =============================
+        // Console Output
+        // =============================
+
+        console.log("===== Variable =====");
+
+        console.log(name);
+        console.log(age);
+        console.log(status);
+        console.log(scores);
+        console.log(student);
+
+        // =============================
+        // Type Conversion
+        // =============================
+
+        let numberString = "100";
+        let decimalString = "99.99";
+        let number = 100;
+
+        let intValue = parseInt(numberString);
+        let floatValue = parseFloat(decimalString);
+        let stringValue = String(number);
+
+        console.log("===== Type Conversion =====");
+
+        console.log(intValue);
+        console.log(floatValue);
+        console.log(stringValue);
+
+        // =============================
+        // Display on Web
+        // =============================
+
+        document.getElementById("output").innerHTML = `
+
+        <table>
+
+            <tr>
+                <th>Variable</th>
+                <th>Value</th>
+                <th>Data Type</th>
+            </tr>
+
+            <tr>
+                <td>name</td>
+                <td>${name}</td>
+                <td>${typeof name}</td>
+            </tr>
+
+            <tr>
+                <td>age</td>
+                <td>${age}</td>
+                <td>${typeof age}</td>
+            </tr>
+
+            <tr>
+                <td>status</td>
+                <td>${status}</td>
+                <td>${typeof status}</td>
+            </tr>
+
+            <tr>
+                <td>scores</td>
+                <td>${scores}</td>
+                <td>${typeof scores}</td>
+            </tr>
+
+            <tr>
+                <td>student</td>
+                <td>${student.name}</td>
+                <td>${typeof student}</td>
+            </tr>
+
+        </table>
+
+        <br>
+
+        <h2>Type Conversion</h2>
+
+        <table>
+
+            <tr>
+                <th>Function</th>
+                <th>Result</th>
+                <th>Data Type</th>
+            </tr>
+
+            <tr>
+                <td>parseInt("100")</td>
+                <td>${intValue}</td>
+                <td>${typeof intValue}</td>
+            </tr>
+
+            <tr>
+                <td>parseFloat("99.99")</td>
+                <td>${floatValue}</td>
+                <td>${typeof floatValue}</td>
+            </tr>
+
+            <tr>
+                <td>String(100)</td>
+                <td>${stringValue}</td>
+                <td>${typeof stringValue}</td>
+            </tr>
+
+        </table>
+
+        `;
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 8.2 - ระบบขายสินค้า | SPU Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --primary: #1F4E44;
+      --primary-dark: #153731;
+      --accent: #E08E45;
+      --text: #22271F;
+      --muted: #6B7280;
+      --border: #E5E1D8;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 16px;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .card {
+      max-width: 680px;
+      margin: 0 auto 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: 0 2px 10px rgba(31, 78, 68, .06);
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      padding: 7px 9px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background: #F1EEE7;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+    }
+
+    .summary {
+      background: #F1F7F5;
+      border: 1px solid #CFE3DC;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .summary p {
+      margin: 4px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <span class="tag">Lab 8.2</span>
+    <h1>ระบบขายสินค้า (VAT + ส่วนลด)</h1>
+    <p style="color:var(--muted);font-size:14px;">ยอดซื้อ ≥ 10,000 บาท ลด 10% | ยอดซื้อ ≥ 5,000 บาท ลด 5% | VAT 7%</p>
+  </div>
+
+  <div class="card">
+    <h2>ตารางที่ 1 — สร้างด้วย for loop</h2>
+    <table id="tableFor"></table>
+  </div>
+
+  <div class="card">
+    <h2>ตารางที่ 2 — สร้างด้วย while loop</h2>
+    <table id="tableWhile"></table>
+  </div>
+
+  <div class="card">
+    <h2>ตารางที่ 3 — สร้างด้วย do-while loop</h2>
+    <table id="tableDoWhile"></table>
+  </div>
+
+  <div class="card">
+    <h2>สรุปยอดขาย</h2>
+    <div id="summaryBox"></div>
+  </div>
+
+  <footer>CSI204 Digital Platform for Software Development — Lab 8.2</footer>
+
+  <script>
+    const products = [
+      { name: "Keyboard", price: 1200, qty: 2 },
+      { name: "Mouse", price: 500, qty: 3 },
+      { name: "Monitor", price: 4500, qty: 1 },
+      { name: "Speaker", price: 1500, qty: 1 },
+      { name: "Headphones", price: 800, qty: 2 }
+    ];
+
+    function buildRow(p) {
+      return `<tr><td>${p.name}</td><td class="num">${p.price.toLocaleString()}</td><td class="num">${p.qty}</td>
+    <td class="num">${(p.price * p.qty).toLocaleString()}</td></tr>`;
+    }
+
+    function renderWithForLoop() {
+      let html = "<tr><th>สินค้า</th><th class='num'>ราคา</th><th class='num'>จำนวน</th><th class='num'>รวม</th></tr>";
+      for (let i = 0; i < products.length; i++) {
+        html += buildRow(products[i]);
+      }
+      document.getElementById("tableFor").innerHTML = html;
+    }
+
+    function renderWithWhileLoop() {
+      let html = "<tr><th>สินค้า</th><th class='num'>ราคา</th><th class='num'>จำนวน</th><th class='num'>รวม</th></tr>";
+      let i = 0;
+      while (i < products.length) {
+        html += buildRow(products[i]);
+        i++;
+      }
+      document.getElementById("tableWhile").innerHTML = html;
+    }
+
+    function renderWithDoWhileLoop() {
+      let html = "<tr><th>สินค้า</th><th class='num'>ราคา</th><th class='num'>จำนวน</th><th class='num'>รวม</th></tr>";
+      let i = 0;
+      do {
+        html += buildRow(products[i]);
+        i++;
+      } while (i < products.length);
+      document.getElementById("tableDoWhile").innerHTML = html;
+    }
+
+    function calculateSummary() {
+      let subtotal = 0;
+      for (let i = 0; i < products.length; i++) {
+        subtotal += products[i].price * products[i].qty;
+      }
+
+      let discountRate = 0;
+      if (subtotal >= 10000) {
+        discountRate = 0.10;
+      } else if (subtotal >= 5000) {
+        discountRate = 0.05;
+      }
+
+      let discount = subtotal * discountRate;
+      let afterDiscount = subtotal - discount;
+      let vat = afterDiscount * 0.07;
+      let total = afterDiscount + vat;
+
+      document.getElementById("summaryBox").innerHTML = `
+    <p><span>ยอดรวมก่อนส่วนลด:</span><span>${subtotal.toLocaleString()} บาท</span></p>
+    <p><span>ส่วนลด (${(discountRate * 100).toFixed(0)}%):</span><span>-${discount.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</span></p>
+    <p><span>ภาษีมูลค่าเพิ่ม (VAT 7%):</span><span>${vat.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</span></p>
+    <p><strong>ยอดสุทธิที่ต้องชำระ:</strong><strong>${total.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</strong></p>
+  `;
+    }
+
+    renderWithForLoop();
+    renderWithWhileLoop();
+    renderWithDoWhileLoop();
+    calculateSummary();
+  </script>
+</body>
+
+</html>
