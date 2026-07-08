@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <title>Lab 7.1 - จัดการข้อมูลลูกค้า | SPU Shop</title>
+  <title>Lab 7.1 - Student Management</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600&display=swap"
     rel="stylesheet">
   <style>
@@ -34,13 +37,14 @@
     }
 
     h1,
+    h2,
     h3 {
       font-family: 'Prompt', sans-serif;
     }
 
     .card {
-      max-width: 680px;
-      margin: 0 auto 20px;
+      max-width: 900px;
+      margin: auto;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -51,10 +55,10 @@
     .tag {
       display: inline-block;
       background: var(--primary);
-      color: #fff;
-      font-size: 12px;
+      color: white;
       padding: 4px 12px;
       border-radius: 999px;
+      font-size: 12px;
       margin-bottom: 12px;
       font-family: 'Prompt', sans-serif;
     }
@@ -62,55 +66,42 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
       font-size: 14px;
     }
 
     th,
     td {
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border);
-      text-align: left;
     }
 
     th {
       background: #F1EEE7;
-      font-family: 'Prompt', sans-serif;
+      text-align: left;
     }
 
-    td.num,
-    th.num {
-      text-align: right;
+    td {
+      background: white;
     }
 
-    .tier-gold {
-      color: #9A6A00;
-      font-weight: 600;
-    }
-
-    .tier-silver {
-      color: #6B7280;
-      font-weight: 600;
-    }
-
-    .tier-bronze {
-      color: #8A5A34;
-      font-weight: 600;
-    }
-
-    .summary {
+    .result {
+      margin-top: 20px;
       background: #F1F7F5;
       border: 1px solid #CFE3DC;
       border-radius: 10px;
-      padding: 16px 20px;
-      margin-top: 18px;
-      font-size: 14px;
+      padding: 18px;
+    }
+
+    ul {
+      margin-top: 10px;
     }
 
     footer {
+      margin-top: 25px;
       text-align: center;
       color: var(--muted);
       font-size: 12px;
-      margin-top: 24px;
     }
   </style>
 </head>
@@ -119,63 +110,142 @@
 
   <div class="card">
     <span class="tag">Lab 7.1</span>
-    <h1>ระบบจัดการข้อมูลลูกค้า (Customer Tier)</h1>
-    <p style="color:var(--muted);font-size:14px;">แบ่งระดับลูกค้าจากยอดซื้อสะสม: Gold ≥ 5,000 / Silver ≥ 2,000 / Bronze
-      &lt; 2,000</p>
+    <h1>Student Management</h1>
 
-    <div id="tableBox"></div>
-    <div id="summaryBox"></div>
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Grade</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="studentTable">
+
+      </tbody>
+
+    </table>
+
+    <div class="result">
+
+      <h2>Summary</h2>
+
+      <p id="averageScore"></p>
+
+      <h3>Students Grade A</h3>
+
+      <ul id="gradeAList"></ul>
+
+    </div>
+
   </div>
 
-  <footer>CSI204 Digital Platform for Software Development — Lab 7.1</footer>
-
   <script>
-    const customers = [
-      { id: 1, name: "สมชาย ใจดี", totalSpend: 6800 },
-      { id: 2, name: "สมหญิง รักช้อป", totalSpend: 2450 },
-      { id: 3, name: "วิชัย มั่งมี", totalSpend: 9200 },
-      { id: 4, name: "อารีย์ ประหยัด", totalSpend: 1200 },
-      { id: 5, name: "กมล ตั้งใจ", totalSpend: 5300 }
+
+    const students = [
+
+      {
+        id: 1,
+        name: "Ball",
+        score: 95,
+        grade: "A"
+      },
+
+      {
+        id: 2,
+        name: "Babe",
+        score: 88,
+        grade: "B"
+      },
+
+      {
+        id: 3,
+        name: "Mike",
+        score: 76,
+        grade: "C"
+      },
+
+      {
+        id: 4,
+        name: "Aha",
+        score: 91,
+        grade: "A"
+      },
+
+      {
+        id: 5,
+        name: "Bob",
+        score: 69,
+        grade: "D"
+      }
+
     ];
 
-    function getTier(spend) {
-      if (spend >= 5000) return "Gold";
-      if (spend >= 2000) return "Silver";
-      return "Bronze";
-    }
 
-    function tierClass(tier) {
-      return tier === "Gold" ? "tier-gold" : tier === "Silver" ? "tier-silver" : "tier-bronze";
-    }
+    // =========================
+    // map()
+    // =========================
 
-    function displayCustomers() {
-      // แสดงข้อมูลด้วย map()
-      let tableHtml = `<table><tr><th>ID</th><th>ชื่อลูกค้า</th><th class="num">ยอดซื้อสะสม</th><th>ระดับ</th></tr>`;
-      customers.map(c => {
-        let tier = getTier(c.totalSpend);
-        tableHtml += `<tr><td>${c.id}</td><td>${c.name}</td>
-      <td class="num">${c.totalSpend.toLocaleString()}</td>
-      <td class="${tierClass(tier)}">${tier}</td></tr>`;
-      });
-      tableHtml += "</table>";
-      document.getElementById("tableBox").innerHTML = tableHtml;
+    const tableBody = document.getElementById("studentTable");
 
-      // คำนวณค่าเฉลี่ยด้วย reduce()
-      let avgSpend = customers.reduce((sum, c) => sum + c.totalSpend, 0) / customers.length;
+    tableBody.innerHTML = students.map(student => `
 
-      // หาลูกค้าที่ได้ระดับ Gold ด้วย filter()
-      let goldCustomers = customers.filter(c => getTier(c.totalSpend) === "Gold");
+<tr>
+    <td>${student.id}</td>
+    <td>${student.name}</td>
+    <td>${student.score}</td>
+    <td>${student.grade}</td>
+</tr>
 
-      document.getElementById("summaryBox").innerHTML = `
-    <div class="summary">
-      <p>ยอดซื้อเฉลี่ยของลูกค้าทั้งหมด: <strong>${avgSpend.toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท</strong></p>
-      <p>ลูกค้าระดับ Gold: <strong>${goldCustomers.map(c => c.name).join(", ") || "ไม่มี"}</strong></p>
-    </div>
-  `;
-    }
+`).join("");
 
-    displayCustomers();
+
+
+    // =========================
+    // reduce()
+    // =========================
+
+    const totalScore = students.reduce((sum, student) => {
+
+      return sum + student.score;
+
+    }, 0);
+
+    const average = totalScore / students.length;
+
+    document.getElementById("averageScore").innerHTML =
+      `<strong>Average Score :</strong> ${average.toFixed(2)}`;
+
+
+
+
+    // =========================
+    // filter()
+    // =========================
+
+    const gradeAStudents = students.filter(student => {
+
+      return student.grade === "A";
+
+    });
+
+    const gradeAList = document.getElementById("gradeAList");
+
+    gradeAList.innerHTML = gradeAStudents.map(student => `
+
+<li>
+${student.name} (${student.score})
+</li>
+
+`).join("");
+
   </script>
+
 </body>
 
 </html>
